@@ -24,9 +24,9 @@ const Hero: React.FC = () => {
           High School's Best Kept Secret
         </div>
         
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] uppercase">
           SLIDES THAT <span className="text-indigo-500">DON'T SUCK.</span><br />
-          GRADES THAT <span className="text-white italic">DO.</span>
+          GRADES THAT <span className="text-white italic underline decoration-indigo-500 underline-offset-8">WOW.</span>
         </h1>
         
         <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium">
