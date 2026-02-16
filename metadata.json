@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Student Presentation Rescue",
+  "description": "An urgent, AI-powered service to transform messy, last-minute presentations into professional slides with 6-hour or 24-hour delivery options.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
