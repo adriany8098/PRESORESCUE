@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Steps from './components/Steps';
@@ -7,12 +7,14 @@ import InstantRescue from './components/InstantRescue';
 import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-import { Upload, Zap, Coffee, CheckCircle, ArrowRight, FileUp } from 'lucide-react';
+import { Upload, Zap, Coffee, CheckCircle, ArrowRight, FileUp, File, XCircle } from 'lucide-react';
 
 function App() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let interval: number;
@@ -24,27 +26,52 @@ function App() {
             clearInterval(interval);
             return 100;
           }
-          return prev + 5;
+          return prev + Math.random() * 15;
         });
-      }, 100);
+      }, 150);
     }
     return () => clearInterval(interval);
   }, [isUploading]);
 
-  const handleSimulateUpload = () => {
-    if (uploadComplete || isUploading) return;
-    
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const processFile = (file: File) => {
+    setSelectedFile(file);
     setIsUploading(true);
+    setUploadComplete(false);
+    
+    // Simulate processing
     setTimeout(() => {
       setIsUploading(false);
       setUploadComplete(true);
-    }, 2200);
+    }, 2500);
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
   };
 
   const resetUpload = (e: React.MouseEvent) => {
     e.stopPropagation();
     setUploadComplete(false);
+    setSelectedFile(null);
     setProgress(0);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const scrollTo = (id: string) => {
@@ -60,7 +87,7 @@ function App() {
       <main>
         <Hero />
         
-        {/* Enhanced "Dump the Mess" Section */}
+        {/* Real "Dump the Mess" Section */}
         <section id="upload" className="py-24 relative bg-indigo-600 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
             <div className="max-w-xl">
@@ -83,9 +110,19 @@ function App() {
             </div>
 
             <div 
-              onClick={handleSimulateUpload}
-              className={`w-full md:w-2/5 aspect-[4/3] glass rounded-[48px] flex flex-col items-center justify-center border-white/20 shadow-2xl transition-all duration-500 cursor-pointer group relative overflow-hidden ${isUploading ? 'scale-95' : uploadComplete ? 'border-green-400/50' : 'hover:scale-[1.02] hover:bg-white/5'}`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={triggerFileInput}
+              className={`w-full md:w-2/5 aspect-[4/3] glass rounded-[48px] flex flex-col items-center justify-center border-white/20 shadow-2xl transition-all duration-500 cursor-pointer group relative overflow-hidden ${isUploading ? 'scale-95' : uploadComplete ? 'border-green-400/50 bg-green-500/5' : 'hover:scale-[1.02] hover:bg-white/5'}`}
             >
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                className="hidden" 
+                accept=".pptx,.pdf,.docx,.txt"
+              />
+
               {isUploading ? (
                 <div className="flex flex-col items-center w-full px-12">
                   <div className="relative mb-8">
@@ -97,12 +134,12 @@ function App() {
                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden mb-4 border border-white/5">
                     <div 
                       className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 transition-all duration-300 ease-out"
-                      style={{ width: `${progress}%` }}
+                      style={{ width: `${Math.min(progress, 100)}%` }}
                     />
                   </div>
                   <div className="flex justify-between w-full text-xs font-black text-indigo-200 uppercase tracking-widest">
-                    <span>Analyzing Mess...</span>
-                    <span>{progress}%</span>
+                    <span>Analyzing your mess...</span>
+                    <span>{Math.round(Math.min(progress, 100))}%</span>
                   </div>
                 </div>
               ) : uploadComplete ? (
@@ -110,21 +147,24 @@ function App() {
                   <div className="p-8 bg-green-400 text-black rounded-full mb-6 shadow-[0_0_50px_rgba(74,222,128,0.4)] animate-bounce">
                     <CheckCircle className="w-12 h-12" />
                   </div>
-                  <h3 className="text-2xl font-black text-white uppercase mb-2 tracking-tighter">Your mess is safe with us!</h3>
-                  <p className="text-indigo-100 text-sm font-medium mb-8">We've identified 12 slides that need a rescue.</p>
+                  <h3 className="text-2xl font-black text-white uppercase mb-2 tracking-tighter">Mess Captured!</h3>
+                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full mb-8 border border-white/10 max-w-full">
+                    <File className="w-4 h-4 text-green-400" />
+                    <span className="text-indigo-100 text-xs font-bold truncate max-w-[150px]">{selectedFile?.name}</span>
+                  </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-4 w-full px-4">
+                  <div className="flex flex-col gap-4 w-full px-4">
                     <button 
                       onClick={(e) => { e.stopPropagation(); scrollTo('pricing'); }}
-                      className="flex-1 bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-xl"
+                      className="w-full bg-white text-indigo-600 px-6 py-5 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-xl"
                     >
                       Choose Speed <ArrowRight className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={resetUpload}
-                      className="text-white/40 hover:text-white/60 text-xs font-bold uppercase transition-colors"
+                      className="flex items-center justify-center gap-2 text-white/40 hover:text-red-400 text-xs font-black uppercase tracking-widest transition-colors"
                     >
-                      Upload another?
+                      <XCircle className="w-3 h-3" /> Remove File
                     </button>
                   </div>
                 </div>
@@ -135,29 +175,24 @@ function App() {
                   </div>
                   <div className="mt-8 text-center relative z-10">
                     <span className="text-2xl font-black text-white uppercase tracking-tighter block mb-2">Drop your mess here</span>
-                    <span className="text-indigo-200 text-xs font-bold uppercase tracking-[0.2em] opacity-60">or click to browse files</span>
+                    <span className="text-indigo-200 text-[10px] font-black uppercase tracking-[0.4em] opacity-60">or click to browse files</span>
                   </div>
                   
-                  {/* Decorative elements inside the card */}
+                  <div className="absolute inset-0 border-2 border-dashed border-white/10 m-6 rounded-[40px] pointer-events-none group-hover:border-white/30 transition-colors" />
                   <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-colors" />
-                  <div className="absolute top-10 left-10 w-2 h-2 bg-indigo-400 rounded-full animate-ping" />
                 </>
               )}
             </div>
           </div>
           
-          {/* Section Background Decoration */}
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500 rounded-full blur-[140px] -mr-64 -mt-64 opacity-40 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600 rounded-full blur-[120px] -ml-32 -mb-32 opacity-20 pointer-events-none" />
         </section>
 
-        <div id="ai-preview">
-          <InstantRescue />
-        </div>
+        <InstantRescue />
         
         <Steps />
 
-        {/* High School Benefits */}
         <section className="py-24 px-6 bg-black relative">
            <div className="absolute inset-0 grid-bg opacity-30"></div>
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
@@ -183,7 +218,6 @@ function App() {
         
         <FAQ />
         
-        {/* Urgent High School CTA */}
         <section className="py-32 px-6 relative overflow-hidden bg-black text-center">
           <div className="absolute inset-0 bg-indigo-600/10 blur-[100px] -z-10" />
           <h2 className="text-5xl md:text-8xl font-black mb-10 tracking-tighter uppercase leading-none">

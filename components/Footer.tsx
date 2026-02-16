@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Zap, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Zap, Instagram, Facebook, Video } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-sm leading-relaxed max-w-sm">
-              Supporting students globally since 2024. Transforming academic panic into polished presentations through the power of AI and professional design.
+              Supporting students globally since 2024. Transforming academic panic into polished presentations through the power of AI and professional human design.
             </p>
           </div>
           
@@ -32,16 +32,16 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Social</h4>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Follow the Rescue</h4>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300" title="Instagram">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300">
-                <Twitter className="w-5 h-5" />
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300" title="TikTok">
+                <Video className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300">
-                <Linkedin className="w-5 h-5" />
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300" title="Facebook">
+                <Facebook className="w-5 h-5" />
               </a>
             </div>
           </div>

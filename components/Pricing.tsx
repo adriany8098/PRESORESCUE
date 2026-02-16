@@ -3,18 +3,19 @@ import React, { useState } from 'react';
 import { 
   Check, Rocket, Flame, Loader2, PartyPopper, X, 
   CreditCard, Link as LinkIcon, Mail, Info, 
-  ShieldCheck, Lock, Globe, Apple, Wallet
+  ShieldCheck, Lock, Globe, Apple, Wallet, Clock, Send
 } from 'lucide-react';
 
 type CheckoutStep = 'pricing' | 'details' | 'payment' | 'success';
 
 const Pricing: React.FC = () => {
   const [step, setStep] = useState<CheckoutStep>('pricing');
-  const [checkoutPlan, setCheckoutPlan] = useState<{name: string, price: string} | null>(null);
+  const [userEmail, setUserEmail] = useState('');
+  const [checkoutPlan, setCheckoutPlan] = useState<{name: string, price: string, time: string} | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSelectPlan = (name: string, price: string) => {
-    setCheckoutPlan({ name, price });
+  const handleSelectPlan = (name: string, price: string, time: string) => {
+    setCheckoutPlan({ name, price, time });
     setStep('details');
   };
 
@@ -25,7 +26,6 @@ const Pricing: React.FC = () => {
 
   const handleFinalPayment = () => {
     setIsProcessing(true);
-    // Simulate real gateway processing
     setTimeout(() => {
       setIsProcessing(false);
       setStep('success');
@@ -44,13 +44,20 @@ const Pricing: React.FC = () => {
         {step === 'pricing' && (
           <div className="animate-in fade-in duration-500">
             <div className="text-center mb-20">
-              <h2 className="text-5xl font-black tracking-tight mb-4 uppercase">Student-Friendly Damage</h2>
+              <div className="inline-block px-4 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-black uppercase tracking-widest mb-4 animate-pulse">
+                🔥 Mid-Semester Flash Sale 🔥
+              </div>
+              <h2 className="text-5xl font-black tracking-tight mb-4 uppercase text-white">Student-Friendly Pricing</h2>
               <p className="text-slate-500 text-lg">Cheaper than a lunch delivery, better for your GPA.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-              {/* Standard */}
-              <div className="glass rounded-[40px] p-10 hover:border-indigo-500/30 transition-all flex flex-col group">
+              {/* Standard - SALE VERSION */}
+              <div className="glass rounded-[40px] p-10 border-indigo-500/30 bg-indigo-500/[0.02] transition-all flex flex-col group relative overflow-hidden">
+                <div className="absolute top-6 -right-12 bg-red-600 text-white text-[10px] font-black py-1 px-12 rotate-45 shadow-xl">
+                  50% OFF
+                </div>
+                
                 <div className="flex justify-between items-start mb-8">
                   <div>
                     <h3 className="text-2xl font-black text-white uppercase tracking-tight">The Chill Saver</h3>
@@ -60,9 +67,12 @@ const Pricing: React.FC = () => {
                     <Rocket className="w-6 h-6 text-slate-400 group-hover:text-indigo-400" />
                   </div>
                 </div>
-                <div className="mb-10">
-                  <span className="text-6xl font-black text-white tracking-tighter">$9.99</span>
-                  <span className="text-slate-500 font-bold ml-2">fixed</span>
+                <div className="mb-10 flex items-end gap-3">
+                  <span className="text-6xl font-black text-white tracking-tighter">$4.99</span>
+                  <div className="flex flex-col mb-1">
+                    <span className="text-slate-500 font-bold line-through text-lg">$9.99</span>
+                    <span className="text-indigo-400 font-black text-[10px] uppercase">Flash Price</span>
+                  </div>
                 </div>
                 <ul className="space-y-5 mb-10 flex-grow">
                   {['24-hour turnaround', 'Professional formatting', 'AI content polishing', 'Up to 12 slides', 'Presentation notes included'].map((item, i) => (
@@ -73,10 +83,10 @@ const Pricing: React.FC = () => {
                   ))}
                 </ul>
                 <button 
-                  onClick={() => handleSelectPlan('The Chill Saver', '$9.99')}
-                  className="w-full py-5 bg-white/5 border border-white/10 rounded-2xl font-black hover:bg-white hover:text-black transition-all text-sm tracking-widest uppercase shadow-lg active:scale-95"
+                  onClick={() => handleSelectPlan('The Chill Saver', '$4.99', '24 hours')}
+                  className="w-full py-5 bg-indigo-600 text-white border border-indigo-400/20 rounded-2xl font-black hover:bg-indigo-500 transition-all text-sm tracking-widest uppercase shadow-lg active:scale-95"
                 >
-                  Rescue Me
+                  Rescue Me for $4.99
                 </button>
               </div>
 
@@ -106,7 +116,7 @@ const Pricing: React.FC = () => {
                   ))}
                 </ul>
                 <button 
-                  onClick={() => handleSelectPlan('The Emergency Exit', '$29.99')}
+                  onClick={() => handleSelectPlan('The Emergency Exit', '$29.99', '6 hours')}
                   className="w-full py-5 bg-white text-indigo-600 rounded-2xl font-black hover:bg-indigo-50 transition-all text-sm tracking-widest uppercase relative z-10 shadow-xl active:scale-95"
                 >
                   I'M PANICKING - FIX IT
@@ -121,7 +131,6 @@ const Pricing: React.FC = () => {
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/95 backdrop-blur-xl animate-in fade-in duration-300 overflow-y-auto">
             <div className="glass w-full max-w-2xl rounded-[40px] border-white/10 shadow-2xl relative my-auto animate-in zoom-in slide-in-from-bottom-8 duration-500 overflow-hidden">
               
-              {/* Header */}
               <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/5">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -154,11 +163,19 @@ const Pricing: React.FC = () => {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Your Academic Email</label>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Email Address (Personal or Academic)</label>
                           <div className="relative">
                             <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                            <input required type="email" placeholder="student@university.edu" className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-5 py-4 text-white focus:ring-2 focus:ring-indigo-500 focus:bg-white/10 transition-all outline-none" />
+                            <input 
+                              required 
+                              type="email" 
+                              placeholder="you@email.com" 
+                              value={userEmail}
+                              onChange={(e) => setUserEmail(e.target.value)}
+                              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-5 py-4 text-white focus:ring-2 focus:ring-indigo-500 focus:bg-white/10 transition-all outline-none" 
+                            />
                           </div>
+                          <p className="text-[10px] text-indigo-400/60 ml-2 italic">We'll send your final deck link here.</p>
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Specific Instructions for the Designer</label>
@@ -227,44 +244,57 @@ const Pricing: React.FC = () => {
                         <>Complete Payment of {checkoutPlan?.price}</>
                       )}
                     </button>
-                    
-                    <div className="flex justify-center items-center gap-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
-                      <span className="flex items-center gap-1"><Lock className="w-3 h-3" /> SSL Secure</span>
-                      <span className="flex items-center gap-1"><Globe className="w-3 h-3" /> Global Delivery</span>
-                      <span className="flex items-center gap-1 text-indigo-400">Powered by Stripe</span>
-                    </div>
                   </div>
                 )}
 
                 {step === 'success' && (
-                  <div className="text-center py-10 animate-in zoom-in duration-500">
-                    <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.4)] animate-bounce">
-                      <PartyPopper className="w-12 h-12 text-black" />
+                  <div className="text-center py-6 animate-in zoom-in duration-500">
+                    <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.4)] animate-bounce">
+                      <PartyPopper className="w-10 h-10 text-black" />
                     </div>
-                    <h3 className="text-4xl font-black text-white uppercase tracking-tighter mb-4 leading-none">THE RESCUE<br />HAS BEGUN!</h3>
-                    <p className="text-slate-300 text-lg font-medium mb-12 leading-relaxed max-w-sm mx-auto">
-                      Payment confirmed. Our design squad has received your mess and is already working their magic.
-                    </p>
-                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-12 text-left">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-xs font-black uppercase tracking-widest text-white">Project ID: RESCUE-9921-X</span>
+                    <h3 className="text-4xl font-black text-white uppercase tracking-tighter mb-4 leading-none">RESCUE IN PROGRESS!</h3>
+                    
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-10 text-left relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Clock className="w-24 h-24 text-indigo-400" />
                       </div>
-                      <p className="text-slate-400 text-sm italic font-medium">"Check your email for real-time progress. We'll send the final deck as soon as it's ready!"</p>
+                      <h4 className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em] mb-4">Rescue Status: In Progress</h4>
+                      <div className="space-y-6 relative z-10">
+                        <div className="flex items-center gap-4">
+                          <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center"><Check className="w-3 h-3 text-black" /></div>
+                          <span className="text-sm font-bold text-white">Payment & Files Received</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="w-6 h-6 rounded-full border-2 border-indigo-500 animate-pulse" />
+                          <span className="text-sm font-bold text-white">AI Analysis & Human Design Kickoff</span>
+                        </div>
+                        <div className="flex items-center gap-4 opacity-40">
+                          <div className="w-6 h-6 rounded-full border-2 border-slate-700" />
+                          <span className="text-sm font-bold text-slate-300">Email Link Sent (Goal: {checkoutPlan?.time})</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-8 pt-6 border-t border-white/5">
+                        <div className="flex items-start gap-3">
+                          <Mail className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-xs font-black text-white uppercase tracking-wider mb-1">Check your inbox: {userEmail}</p>
+                            <p className="text-[10px] text-slate-500 font-medium">We'll email you a secure download link for your .pptx and .pdf files the moment they're ready.</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
                     <button 
                       onClick={closeCheckout}
-                      className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-400 hover:text-white transition-all shadow-xl"
+                      className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-400 hover:text-white transition-all shadow-xl flex items-center justify-center gap-2"
                     >
+                      <Send className="w-4 h-4" />
                       Back to Dashboard
                     </button>
                   </div>
                 )}
               </div>
-
-              {/* Decorative side orbs */}
-              <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl -z-10" />
             </div>
           </div>
         )}
