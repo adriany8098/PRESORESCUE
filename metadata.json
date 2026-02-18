@@ -1,6 +1,6 @@
 {
-  "name": "Copy of Student Presentation Rescue",
-  "description": "An urgent, AI-powered service to transform messy, last-minute presentations into professional slides with 6-hour or 24-hour delivery options.",
+  "name": "PresoRescue",
+  "description": "Student Presentation Rescue - Turn academic panic into high-quality slides.",
   "requestFramePermissions": [
     "camera"
   ]

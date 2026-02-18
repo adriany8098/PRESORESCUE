@@ -1,4 +1,3 @@
-
 export enum DeliverySpeed {
   STANDARD = '24-hour Standard',
   EXPRESS = '6-hour Express'

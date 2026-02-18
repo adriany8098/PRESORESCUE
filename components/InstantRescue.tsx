@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Sparkles, Loader2, Terminal, AlertCircle, RefreshCcw } from 'lucide-react';
 import { getRescueAdvice } from '../services/geminiService';
